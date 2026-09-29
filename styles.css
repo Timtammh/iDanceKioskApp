@@ -1,0 +1,765 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap');
+/* 01. Theme variables: background, text, corners, and glow */
+:root {
+  color-scheme: dark;
+  --bg: #08090b;
+  --card: #191c21;
+  --text: #f4f5f7;
+  --muted: #929ba8;
+  --neon: #60e9f4;
+  --line: #30363e;
+  --radius: 16px;
+  --glow: 0 0 5px #60e9f466,0 0 18px #60e9f426,inset 0 0 10px #60e9f40c;
+}
+
+/* 02. Base styles and keyboard focus */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC',Arial,sans-serif;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 5px;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+/* 03. Page container and branding */
+.kiosk {
+  max-width: 1040px;
+  margin: auto;
+  padding: 0 32px 22px;
+}
+
+.brand {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 0 14px;
+  gap: 12px;
+}
+
+.brand a {
+  text-decoration: none;
+  color: var(--text);
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-shadow: 0 0 18px #60e9f455;
+}
+
+.brand a span {
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-left: 14px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.demo-label {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* 04. Section headings and dividers */
+.section {
+  padding: 22px 0;
+  position: relative;
+}
+
+.section+.section:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,transparent,#60e9f4aa 12%,#60e9f4aa 88%,transparent);
+  box-shadow: 0 0 8px #60e9f450,0 0 16px #60e9f426;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-heading h1, .section-heading h2 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.section-heading h2 span {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 13px;
+  margin-left: 10px;
+}
+
+.section-heading > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.section-heading > span span {
+  margin-left: 8px;
+  color: var(--neon);
+  font-size: 18px;
+}
+
+/* 05. Shared horizontal card rails */
+.rail {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 10px 5px 16px;
+  margin: 0 -5px;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 5px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #3b5359 transparent;
+}
+
+.rail > button {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: 0 4px 10px #0003;
+  transition: border-color .2s,box-shadow .2s;
+  text-align: left;
+}
+
+.rail > button:hover {
+  border-color: #6a8187;
+}
+
+.rail > button[aria-pressed=true] {
+  border-color: var(--neon);
+  box-shadow: var(--glow);
+}
+
+/* 06. Category cards */
+.category {
+  width: calc((100% - 80px)/5.35);
+  min-width: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px 10px;
+}
+
+.category svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: #a0abb8;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.category[aria-pressed=true] svg {
+  stroke: var(--neon);
+  filter: drop-shadow(0 0 5px #60e9f455);
+}
+
+.category-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.category small {
+  font-size: 9px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+/* 07. Product images, models, and descriptions */
+.product {
+  width: calc((100% - 48px)/3.35);
+  min-width: 200px;
+  padding: 12px;
+}
+
+.product img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.75;
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: #121419;
+}
+
+.product-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 3px 3px;
+}
+
+.product-copy strong {
+  font-size: 16px;
+  letter-spacing: .5px;
+}
+
+.product-copy span {
+  font-size: 12px;
+  color: #a5adba;
+}
+
+/* 08. Player and placeholder preview */
+.screen {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid #37434a;
+  background: #101216;
+  box-shadow: 0 5px 22px #0005;
+}
+
+.screen video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.screen [hidden] {
+  display: none;
+}
+
+.preview {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 75% 45%,#233139 0,transparent 58%),#111419;
+  display: flex;
+  align-items: center;
+  padding: 7%;
+}
+
+.preview-copy {
+  position: relative;
+  z-index: 1;
+  width: 43%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--neon);
+}
+
+.preview-copy strong {
+  font-size: clamp(24px,5vw,58px);
+  letter-spacing: -1px;
+}
+
+.preview-copy > span:last-of-type {
+  color: #a5adba;
+  font-size: 13px;
+}
+
+.preview > img {
+  width: 62%;
+  margin-left: -3%;
+  filter: drop-shadow(0 22px 20px #0008);
+}
+
+.preview-note {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.play-toggle {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 18px 22px;
+}
+
+.play-icon, .play-hint {
+  background: #111a;
+  border: 1px solid #465159;
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.play-icon {
+  color: var(--neon);
+}
+
+.equalizer {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.equalizer i {
+  height: 60%;
+  width: 3px;
+  background: #60e9f488;
+  border-radius: 4px;
+  box-shadow: 0 0 8px #60e9f433;
+  animation: beat 1s ease-in-out infinite alternate;
+}
+
+.equalizer i:nth-child(3n) {
+  height: 100%;
+  animation-delay: -.6s;
+}
+
+.equalizer i:nth-child(3n + 1) {
+  height: 30%;
+  animation-delay: -.3s;
+}
+
+.screen.paused .equalizer i {
+  animation-play-state: paused;
+}
+
+@keyframes beat {
+  to {
+    transform: scaleY(.25);
+  }
+
+}
+
+/* 09. Volume buttons and slider */
+.volume-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.control {
+  min-width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  background: #15181d;
+  border: 1px solid #38414b;
+  border-radius: 12px;
+  font-size: 27px;
+}
+
+.control:hover {
+  border-color: var(--neon);
+  box-shadow: var(--glow);
+}
+
+.control svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.volume-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#mute[aria-pressed=true] .sound-waves, #mute[aria-pressed=false] .mute-cross {
+  display: none;
+}
+
+#volume {
+  appearance: none;
+  flex: 1;
+  min-width: 30px;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+}
+
+#volume::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 8px;
+  background: #46535d;
+}
+
+#volume::-moz-range-track {
+  height: 10px;
+  border-radius: 8px;
+  background: #46535d;
+}
+
+#volume::-webkit-slider-thumb {
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -8px;
+  border: 2px solid var(--neon);
+  border-radius: 50%;
+  background: #1c272e;
+  box-shadow: var(--glow);
+}
+
+#volume::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--neon);
+  border-radius: 50%;
+  background: #1c272e;
+  box-shadow: var(--glow);
+}
+
+#volume-value {
+  min-width: 45px;
+  font-size: 12px;
+  color: #c7d1db;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 10. Video thumbnails and titles */
+.video-choice {
+  width: calc((100% - 40px)/3.15);
+  min-width: 210px;
+  padding: 9px;
+}
+
+.thumbnail {
+  position: relative;
+  display: block;
+  aspect-ratio: 16/9;
+  border-radius: 11px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center,#303e49,#111419);
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 5px 32px;
+}
+
+.thumbnail .thumb-play {
+  position: absolute;
+  left: 10px;
+  bottom: 9px;
+  color: var(--text);
+  font-size: 11px;
+}
+
+.thumbnail .duration {
+  position: absolute;
+  bottom: 9px;
+  right: 10px;
+  background: #08090bcc;
+  padding: 3px 6px;
+  border-radius: 5px;
+  font-size: 10px;
+}
+
+.video-title {
+  display: block;
+  font-size: 12px;
+  padding: 11px 4px 3px;
+}
+
+.video-title span {
+  color: var(--muted);
+  margin-left: 5px;
+}
+
+.video-choice:nth-child(2) .thumbnail {
+  background: radial-gradient(ellipse,#343047,#111419);
+}
+
+.video-choice:nth-child(3) .thumbnail {
+  background: radial-gradient(ellipse,#354035,#111419);
+}
+
+/* 11. Large-screen layout */
+@media (min-width: 1400px) {
+  .kiosk {
+    max-width: 1120px;
+  }
+
+  .screen {
+    aspect-ratio: 16/9;
+    margin: auto;
+  }
+
+  .product img {
+    aspect-ratio: 2;
+  }
+
+}
+
+/* 12. Mobile layout */
+@media (max-width: 600px) {
+  .kiosk {
+    padding: 0 18px 15px;
+  }
+
+  .brand {
+    padding-top: 18px;
+  }
+
+  .brand a span {
+    display: none;
+  }
+
+  .section {
+    padding: 18px 0;
+  }
+
+  .section-heading h1, .section-heading h2 {
+    font-size: 14px;
+  }
+
+  .section-heading > span {
+    font-size: 10px;
+  }
+
+  .category {
+    min-width: 105px;
+  }
+
+  .rail {
+    gap: 12px;
+  }
+
+  .product {
+    width: 72%;
+    min-width: 0;
+  }
+
+  .product img {
+    aspect-ratio: 1.85;
+  }
+
+  .video-choice {
+    width: 72%;
+    min-width: 0;
+  }
+
+  .preview {
+    padding: 6%;
+  }
+
+  .preview-copy {
+    gap: 6px;
+  }
+
+  .eyebrow {
+    font-size: 6px;
+    letter-spacing: 1px;
+  }
+
+  .preview-copy > span:last-of-type {
+    font-size: 9px;
+  }
+
+  .preview-note {
+    font-size: 8px;
+    bottom: 10px;
+    left: 12px;
+  }
+
+  .equalizer {
+    height: 19px;
+    margin-top: 3px;
+  }
+
+  .play-toggle {
+    padding: 8px;
+  }
+
+  .play-hint {
+    display: none;
+  }
+
+  .volume-controls {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .volume-label {
+    display: none;
+  }
+
+  .control {
+    min-width: 44px;
+    height: 44px;
+  }
+
+  #volume-value {
+    min-width: 35px;
+    font-size: 10px;
+  }
+
+  .section-heading h2 span {
+    font-size: 11px;
+  }
+
+  .demo-label {
+    font-size: 9px;
+  }
+
+}
+
+/* 13. Reduced-motion preference */
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after {
+    animation: none!important;
+    transition: none!important;
+    scroll-behavior: auto!important;
+  }
+
+}
+
+
+/* 14. Rainbow neon effects and drag states (override base styles) */
+/* Rainbow light tubes: a bright core with a soft, multicolour halo. */
+:root {
+  --rainbow: linear-gradient(100deg, #ff16ba 0%, #ff244b 19%, #ff8a16 35%, #fff629 48%, #46ff38 62%, #20f5ed 76%, #6843ff 89%, #ef25ff 100%);
+}
+
+.rail {
+  padding: 18px 12px 20px;
+  margin-inline: -12px;
+  scroll-padding-inline: 12px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rail > button {
+  position: relative;
+  isolation: isolate;
+  cursor: grab;
+}
+
+.rail > button[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--card);
+  box-shadow: 0 4px 12px #0005;
+}
+
+.rail > button[aria-pressed="true"]::before, .rail > button[aria-pressed="true"]::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: var(--rainbow);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.rail > button[aria-pressed="true"]::before {
+  inset: -5px;
+  padding: 7px;
+  filter: blur(6px);
+  opacity: .85;
+  z-index: -1;
+}
+
+.rail > button[aria-pressed="true"]::after {
+  filter: brightness(1.55);
+  box-shadow: inset 0 0 2px #fff9;
+}
+
+.section + .section::before {
+  background: var(--rainbow);
+  box-shadow: none;
+  opacity: .85;
+}
+
+.section + .section::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--rainbow);
+  filter: blur(6px);
+  opacity: .5;
+  pointer-events: none;
+}
+
+.rail.is-dragging {
+  scroll-snap-type: none;
+}
+
+.rail.is-dragging, .rail.is-dragging > button {
+  cursor: grabbing;
+}
+
+
+/* Two full thumbnails and part of the third keep the video rail scrollable. */
+.video-choice {
+  width: calc((100% - 32px) / 2.65);
+}
+
+@media (max-width: 600px) {
+  .video-choice {
+    width: 72%;
+  }
+
+}
