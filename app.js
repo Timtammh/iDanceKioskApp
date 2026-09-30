@@ -2,34 +2,58 @@
 // Demo catalogue: replace these models, illustrations and video sources with production assets.
 
 // -----------------------------------------------------------------------------
-// 01. Product data: model, short description, and asset name
+// 01. Product data: model, short description, and image filename (with extension)
 // -----------------------------------------------------------------------------
 const products = [
-['DJ-200', 'Start mixing with dual decks', 'dj'],
-['SYN-37', 'Find your signature sound', 'synth'],
-['BEAT-8', 'Create beats at your fingertips', 'pad'],
-['MIC-01', 'Capture every vocal detail', 'mic'],
-['PARTY-12', 'Bring your party to life', 'speaker'],
-['KEY-49', 'Let every chord flow', 'keys'],
-['MIX-4', 'Shape your mix with ease', 'mixer'],
-['LIVE-02', 'Two mics. One shared moment.', 'duo'],
+  ['G-600L', 'Start mixing with dual decks', 'keyb.png'],
+  ['G-600LA', 'Find your signature sound', 'g600al.png'],
+  ['G900', 'Create beats at your fingertips', 'g900.png'],
+  ['FreedomSolo', 'Discover FreedomSolo', 'FreedomSolo.png'],
+  ['StageRocker2', 'Discover StageRocker2', 'StageRocker2.png'],
+  ['MIC-01', 'Capture every vocal detail', 'mic.svg'],
+  ['PARTY-12', 'Bring your party to life', 'speaker.svg'],
+  ['KEY-49', 'Let every chord flow', 'keys.svg'],
+  ['MIX-4', 'Shape your mix with ease', 'mixer.svg'],
+  ['LIVE-02', 'Two mics. One shared moment.', 'duo.svg'],
 ].map(([model, description, image]) => ({
   model,
   description,
-  image: `assets/${image}.svg`
+  image: `assets/${image}`
 }));
 
 // -----------------------------------------------------------------------------
-// 02. Category names and SVG icons
+// 02. Category names and image paths
 // -----------------------------------------------------------------------------
-const categoryNames = ['DEEJAY', 'SYNTH', 'DRUMS', 'MICS', 'KARAOKE'];
-const iconPaths = [
-'<rect x="3" y="7" width="34" height="25" rx="3"/><circle cx="12" cy="19" r="6"/><circle cx="28" cy="19" r="6"/><path d="M19 11v16m3-16v16M7 28h7m12 0h7"/>',
-'<rect x="3" y="9" width="34" height="23" rx="3"/><path d="M3 17h34M10 17v15m7-15v15m7-15v15m7-15v15M9 10v3m6-3v3m6-3v3"/>',
-'<rect x="5" y="5" width="30" height="30" rx="4"/><path d="M15 5v30M25 5v30M5 15h30M5 25h30"/>',
-'<rect x="14" y="3" width="12" height="23" rx="6"/><path d="M9 18v3a11 11 0 0 0 22 0v-3M20 32v6m-7 0h14M17 9h6m-6 5h6"/>',
-'<rect x="6" y="3" width="28" height="34" rx="4"/><circle cx="20" cy="25" r="8"/><circle cx="20" cy="11" r="3"/><circle cx="20" cy="25" r="3"/>',
+const categoryNames = ['Keyboard', 'Drum', 'DRUMS', 'MICS', 'KARAOKE'];
+// Replace each path with the image for the matching category.
+const categoryImages = [
+  'assets/keyb.png', // Keyboard
+  'assets/StageRocker2.png', // Drum
+  'assets/category-placeholder.svg', // DRUMS
+  'assets/category-placeholder.svg', // MICS
+  'assets/category-placeholder.svg', // KARAOKE
 ];
+
+// Edit these model lists to move products between categories.
+// Categories without a group show the full demo catalogue for scrolling tests.
+const productModelsByCategory = {
+  Keyboard: ['G-600L', 'G-600LA', 'G900'],
+  Drum: ['FreedomSolo', 'StageRocker2'],
+};
+
+function getCategoryProducts() {
+  const models = productModelsByCategory[getCategoryName()];
+  if (!models) return products;
+  return products.filter(product => models.includes(product.model));
+}
+
+function getCategoryName() {
+  return categoryNames[state.category % categoryNames.length];
+}
+
+function getSelectedProduct() {
+  return getCategoryProducts()[state.product];
+}
 // Provide src/poster for real clips. Empty src keeps the clearly labelled animated layout preview.
 
 // -----------------------------------------------------------------------------
@@ -39,55 +63,44 @@ const iconPaths = [
 // Set src to a path such as "vo/your-video.mp4"; empty src shows a preview.
 // Set poster to an optional thumbnail image path. Duration is edited manually.
 const clipsByProduct = {
-  "DJ-200": [
+  "FreedomSolo": [
     {
-      "title": "Playbox demo",
-      "duration": "00:05",
-      "src": "vo/kling_20260929_VIDEO_PLAYBOX_st_4077_0.mp4"
-    },
-    {
-      "title": "Feature tour",
-      "duration": "Preview",
-      "src": ""
-    },
-    {
-      "title": "Live demo",
-      "duration": "Preview",
-      "src": ""
+      title: 'FreedomSolo demo',
+      duration: '00:48',
+      src: 'vo/FreedomSolo_EN_10MB.mp4',
+      poster: 'assets/FreedomSolo.png'
     }
   ],
-  "SYN-37": [
+  "StageRocker2": [
     {
-      "title": "Quick start",
-      "duration": "Preview",
-      "src": ""
-    },
-    {
-      "title": "Feature tour",
-      "duration": "Preview",
-      "src": ""
-    },
-    {
-      "title": "Live demo",
-      "duration": "Preview",
-      "src": ""
+      title: 'StageRocker2 demo',
+      duration: '00:38',
+      src: 'vo/Stage Rocker 2 DJ_2_HD.mp4',
+      poster: 'assets/StageRocker2.png'
     }
   ],
-  "BEAT-8": [
+  "G-600L": [
     {
-      "title": "Quick start",
-      "duration": "Preview",
-      "src": ""
-    },
+      title: 'G-600L demo',
+      duration: '01:11',
+      src: 'vo/G600L_PACK_EN_10MB.mp4',
+      poster: 'assets/keyb.png'
+    }
+  ],
+  "G-600LA": [
     {
-      "title": "Feature tour",
-      "duration": "Preview",
-      "src": ""
-    },
+      title: 'G-600LA demo',
+      duration: '00:58',
+      src: 'vo/G600LA_ENHD.mp4',
+      poster: 'assets/g600al.png'
+    }
+  ],
+  "G900": [
     {
-      "title": "Live demo",
-      "duration": "Preview",
-      "src": ""
+      title: 'G900 demo',
+      duration: '01:13',
+      src: 'vo/G900_EN_10MB.mp4',
+      poster: 'assets/g900.png'
     }
   ],
   "MIC-01": [
@@ -178,7 +191,9 @@ const clipsByProduct = {
 };
 
 function getProductClips() {
-  const model = products[state.product].model;
+  const product = getSelectedProduct();
+  if (!product) return [];
+  const model = product.model;
   const playlist = clipsByProduct[model];
 
   // Keep the preview usable if a model has no playlist or an empty playlist.
@@ -220,11 +235,12 @@ function updatePlayback(playing) {
   $('.play-hint').textContent = playing ? 'Tap to pause' : 'Tap to play';
   $('.play-toggle').setAttribute('aria-label', playing ? 'Pause playback' : 'Start playback');
   $('#play-status').textContent = playing
-    ? (getProductClips()[state.clip].src ? 'Playing' : 'Preview playing')
+    ? (getProductClips()[state.clip]?.src ? 'Playing' : 'Preview playing')
     : 'Paused · Tap to play';
 }
 
 async function play() {
+  if (!getSelectedProduct()) return;
   const request = ++playbackRequest;
   if (!getProductClips()[state.clip].src) {
     updatePlayback(true);
@@ -238,10 +254,21 @@ async function play() {
 }
 
 function loadClip() {
-  const product = products[state.product];
+  const product = getSelectedProduct();
   const clip = getProductClips()[state.clip];
   ++playbackRequest;
   player.pause();
+  $('.play-toggle').disabled = !product;
+  if (!product) {
+    player.removeAttribute('src');
+    player.load();
+    player.hidden = true;
+    $('.preview').hidden = true;
+    $('#player-title').textContent = 'No products in this category';
+    updatePlayback(false);
+    $('#play-status').textContent = 'Choose another category';
+    return;
+  }
   $('#player-title').replaceChildren(document.createTextNode(product.model + ' '));
   const title = document.createElement('span');
   title.textContent = clip.title;
@@ -274,7 +301,7 @@ function renderVideos() {
     button.className = 'video-choice';
     button.innerHTML = `
       <span class="thumbnail">
-        <img src="${clip.poster || products[state.product].image}" alt="" draggable="false">
+        <img src="${clip.poster || getSelectedProduct().image}" alt="" draggable="false">
         <span class="thumb-play" aria-hidden="true">▶</span>
         <span class="duration">${clip.duration}</span>
       </span>
@@ -289,17 +316,21 @@ function renderVideos() {
     videoRail.append(button);
   });
 }
-for (let index = 0; index < 10; index++) {
-  const type = index % 5;
+// Repeat the five categories to keep ten cards available for scrolling tests.
+for (let index = 0; index < categoryNames.length * 2; index++) {
+  const type = index % categoryNames.length;
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'category';
   button.innerHTML = `
-    <svg viewBox="0 0 40 40" aria-hidden="true">
-      ${iconPaths[type]}
-    </svg>
+    <img
+      class="category-image"
+      src="${categoryImages[type]}"
+      alt=""
+      draggable="false"
+    >
     <span class="category-label">
-      ${categoryNames[type]}${index >= 5 ? '<small>02</small>' : ''}
+      ${categoryNames[type]}${index >= categoryNames.length ? '<small>02</small>' : ''}
     </span>
   `;
   button.addEventListener('click', () => {
@@ -307,34 +338,41 @@ for (let index = 0; index < 10; index++) {
     state.product = 0;
     state.clip = 0;
     select(categories, index);
-    select(productRail, 0);
-    $('#products-title').innerHTML = `${categoryNames[type]} <span>Featured products</span>`;
-    productRail.scrollLeft = 0;
+    renderProducts();
+    videoRail.scrollLeft = 0;
     renderVideos();
     loadClip();
   });
   categories.append(button);
 }
-products.forEach((product, index) => {
-  const button = document.createElement('button');
-  button.className = 'product';
-  button.type = 'button';
-  button.innerHTML = `
-    <img src="${product.image}" alt="${product.model} product illustration" draggable="false">
-    <span class="product-copy">
-      <strong>${product.model}</strong>
-      <span>${product.description}</span>
-    </span>
-  `;
-  button.addEventListener('click', () => {
-    state.product = index;
-    state.clip = 0;
-    select(productRail, index);
-    renderVideos();
-    loadClip();
+function renderProducts() {
+  productRail.replaceChildren();
+  const visibleProducts = getCategoryProducts();
+  $('#products-title').innerHTML = `${getCategoryName()} <span>Featured products</span>`;
+  $('#product-count').textContent = `${visibleProducts.length} ${visibleProducts.length === 1 ? 'product' : 'products'}`;
+  productRail.scrollLeft = 0;
+  getCategoryProducts().forEach((product, index) => {
+    const button = document.createElement('button');
+    button.className = 'product';
+    button.type = 'button';
+    button.innerHTML = `
+      <img src="${product.image}" alt="${product.model} product illustration" draggable="false">
+      <span class="product-copy">
+        <strong>${product.model}</strong>
+        <span>${product.description}</span>
+      </span>
+    `;
+    button.addEventListener('click', () => {
+      state.product = index;
+      state.clip = 0;
+      select(productRail, index);
+      renderVideos();
+      loadClip();
+    });
+    productRail.append(button);
   });
-  productRail.append(button);
-});
+  select(productRail, state.product);
+}
 
 // -----------------------------------------------------------------------------
 // 07. Player events
@@ -349,11 +387,11 @@ $('.play-toggle').addEventListener('click', () => {
 
 player.addEventListener('play', () => updatePlayback(true));
 player.addEventListener('pause', () => {
-  if (getProductClips()[state.clip].src) updatePlayback(false);
+  if (getProductClips()[state.clip]?.src) updatePlayback(false);
 });
 
 player.addEventListener('error', () => {
-  if (getProductClips()[state.clip].src) {
+  if (getProductClips()[state.clip]?.src) {
     updatePlayback(false);
     $('#play-status').textContent = 'Unable to load video. Please choose another.';
   }
@@ -419,10 +457,31 @@ for (const rail of [categories, productRail, videoRail]) {
 // 10. Initialize the page
 // -----------------------------------------------------------------------------
 select(categories, 0);
-select(productRail, 0);
+renderProducts();
 renderVideos();
 updateVolume();
-loadClip();
+// Load the product video only after the welcome screen has been dismissed.
+const welcomeScreen = $('#welcome-screen');
+const welcomeVideo = $('#welcome-video');
+const enterSite = $('#enter-site');
+const homepage = $('#homepage');
+
+function enterHomepage() {
+  if (welcomeScreen.hidden) return;
+
+  welcomeScreen.hidden = true;
+  welcomeVideo.pause();
+  welcomeVideo.removeAttribute('autoplay');
+  homepage.hidden = false;
+  loadClip();
+  categories.querySelector('button')?.focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+}
+
+enterSite.addEventListener('click', enterHomepage);
+// The entry button remains usable even if autoplay is blocked or the video fails.
+welcomeVideo.muted = true;
+welcomeVideo.play().catch(() => {});
 // Native touch/trackpad scrolling stays intact; mouse users can grab any card.
 
 // -----------------------------------------------------------------------------
@@ -475,3 +534,12 @@ function enableDragScroll(rail) {
   rail.addEventListener('dragstart', event => event.preventDefault());
 }
 [categories, productRail, videoRail].forEach(enableDragScroll);
+
+// Fit the 1080 x 1920 portrait canvas without stretching its proportions.
+function resizePortraitCanvas() {
+  const scale = Math.min(window.innerWidth / 1080, window.innerHeight / 1920, 1);
+  document.documentElement.style.setProperty('--kiosk-scale', scale);
+}
+
+resizePortraitCanvas();
+window.addEventListener('resize', resizePortraitCanvas);

@@ -3,7 +3,7 @@
 :root {
   color-scheme: dark;
   --bg: #08090b;
-  --card: #191c21;
+  --card: #000;
   --text: #f4f5f7;
   --muted: #929ba8;
   --neon: #60e9f4;
@@ -170,29 +170,23 @@ button:disabled {
 
 /* 06. Category cards */
 .category {
-  width: calc((100% - 80px)/5.35);
-  min-width: 125px;
+  width: calc((100% - 48px) / 3.35);
+  min-width: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap: 10px;
-  padding: 15px 10px;
+  padding: 12px;
 }
 
-.category svg {
-  width: 34px;
-  height: 34px;
-  fill: none;
-  stroke: #a0abb8;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.category[aria-pressed=true] svg {
-  stroke: var(--neon);
-  filter: drop-shadow(0 0 5px #60e9f455);
+.category-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.75;
+  object-fit: contain;
+  border-radius: 10px;
 }
 
 .category-label {
@@ -210,18 +204,19 @@ button:disabled {
 
 /* 07. Product images, models, and descriptions */
 .product {
-  width: calc((100% - 48px)/3.35);
-  min-width: 200px;
-  padding: 12px;
+  width: calc((100% - 80px) / 5.35);
+  min-width: 125px;
+  padding: 15px 10px;
 }
 
 .product img {
   display: block;
-  width: 100%;
-  aspect-ratio: 1.75;
+  width: min(134px, 100%);
+  height: 134px;
+  margin-inline: auto;
   object-fit: contain;
   border-radius: var(--radius);
-  background: #121419;
+  background: #000;
 }
 
 .product-copy {
@@ -482,7 +477,7 @@ button:disabled {
   aspect-ratio: 16/9;
   border-radius: 11px;
   overflow: hidden;
-  background: radial-gradient(ellipse at center,#303e49,#111419);
+  background: #000;
 }
 
 .thumbnail img {
@@ -522,11 +517,11 @@ button:disabled {
 }
 
 .video-choice:nth-child(2) .thumbnail {
-  background: radial-gradient(ellipse,#343047,#111419);
+  background: #000;
 }
 
 .video-choice:nth-child(3) .thumbnail {
-  background: radial-gradient(ellipse,#354035,#111419);
+  background: #000;
 }
 
 /* 11. Large-screen layout */
@@ -694,7 +689,7 @@ button:disabled {
 .rail > button[aria-pressed="true"] {
   border-color: transparent;
   background: var(--card);
-  box-shadow: 0 4px 12px #0005;
+  box-shadow: 3px 6px 15px rgba(252, 252, 252, 0.333);
 }
 
 .rail > button[aria-pressed="true"]::before, .rail > button[aria-pressed="true"]::after {
@@ -714,13 +709,13 @@ button:disabled {
 .rail > button[aria-pressed="true"]::before {
   inset: -5px;
   padding: 7px;
-  filter: blur(6px);
+  filter: blur(16px);
   opacity: .85;
   z-index: -1;
 }
 
 .rail > button[aria-pressed="true"]::after {
-  filter: brightness(1.55);
+  filter: brightness(1.75);
   box-shadow: inset 0 0 2px #fff9;
 }
 
@@ -762,4 +757,103 @@ button:disabled {
     width: 72%;
   }
 
+}
+
+/* 15. Full-screen welcome video and homepage entry */
+.welcome-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000;
+}
+
+.welcome-screen[hidden],
+.kiosk[hidden] {
+  display: none;
+}
+
+#welcome-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.enter-site {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 32px 20px max(40px, env(safe-area-inset-bottom));
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.enter-site:focus-visible {
+  outline: 3px solid var(--neon);
+  outline-offset: -6px;
+}
+
+/* 16. Portrait kiosk: 1080 x 1920, scaled to fit the available screen. */
+body {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+.portrait-frame {
+  position: relative;
+  width: calc(1080px * var(--kiosk-scale, 1));
+  height: calc(1920px * var(--kiosk-scale, 1));
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.portrait-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1080px;
+  height: 1920px;
+  transform: scale(var(--kiosk-scale, 1));
+  transform-origin: top left;
+}
+
+.portrait-canvas .welcome-screen {
+  position: absolute;
+}
+
+.portrait-canvas .kiosk {
+  width: 1080px;
+  max-width: none;
+  height: 1920px;
+  margin: 0;
+  padding: 24px 32px;
+  overflow-y: auto;
+}
+
+/* Keep the desktop card layout inside the scaled portrait canvas. */
+.portrait-canvas .rail {
+  gap: 16px;
+}
+
+.portrait-canvas .category {
+  width: calc((100% - 48px) / 3.35);
+  min-width: 200px;
+}
+
+.portrait-canvas .product {
+  width: calc((100% - 80px) / 5.35);
+  min-width: 125px;
+}
+
+.portrait-canvas .video-choice {
+  width: calc((100% - 32px) / 2.65);
+  min-width: 210px;
 }

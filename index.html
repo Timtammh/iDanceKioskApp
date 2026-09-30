@@ -8,7 +8,18 @@
     <script src="app.js" defer></script>
   </head>
   <body>
-    <main class="kiosk">
+    <div class="portrait-frame">
+      <div class="portrait-canvas">
+    <!-- Welcome video: tap anywhere to open the product homepage. -->
+    <section id="welcome-screen" class="welcome-screen" aria-label="Welcome to iDance">
+      <video id="welcome-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="vo/web-vo.mp4" type="video/mp4">
+      </video>
+      <button id="enter-site" class="enter-site" type="button" aria-label="Enter the product homepage">
+      </button>
+    </section>
+
+    <main class="kiosk" id="homepage" hidden>
 
       <!-- Brand header -->
 <!--       <header class="brand">
@@ -35,11 +46,11 @@
       <section class="section" aria-labelledby="products-title">
         <div class="section-heading">
           <h2 id="products-title">
-            DEEJAY
+            Keyboard
             <span>Featured products</span>
           </h2>
           <span>
-            8 products
+            <output id="product-count">3 products</output>
             <span aria-hidden="true">↔</span>
           </span>
         </div>
@@ -51,7 +62,7 @@
         <div class="section-heading">
           <h2 id="player-title">
             DJ-200
-            <span>Quick qwwqwdqwdqw</span>
+            <!-- <span>Quick start</span> -->
           </h2>
           <span id="play-status" role="status">Preview playing</span>
         </div>
@@ -117,5 +128,7 @@
         <div class="videos rail" aria-label="Video list"></div>
       </section>
     </main>
+      </div>
+    </div>
   </body>
 </html>
