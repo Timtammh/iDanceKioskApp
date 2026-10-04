@@ -1,22 +1,65 @@
 'use strict';
+
+// Generate once; CSS animates each star at its own pace without a JS render loop.
+const starfield = document.querySelector('.starfield');
+const stars = document.createDocumentFragment();
+for (let index = 0; index < 279; index += 1) {
+  const star = document.createElement('span');
+  const size = 1.5 + Math.random() ** 2 * 4;
+  star.style.cssText = `
+    --x: ${Math.random() * 100}%;
+    --y: ${Math.random() * 100}%;
+    --size: ${size}px;
+    --alpha: ${.25 + Math.random() * .5};
+    --drift: ${Math.random() * 60 - 30}px;
+    --duration: ${10 + Math.random() * 16}s;
+    --delay: ${-Math.random() * 26}s;
+  `;
+  stars.append(star);
+}
+// Scatter a few music notes through the stars in loosely spaced rows.
+const musicSymbols = ['♪', '♫', '♬'];
+for (let index = 0; index < 47; index += 1) {
+  const note = document.createElement('span');
+  note.className = 'music-note';
+  note.textContent = musicSymbols[index % musicSymbols.length];
+  note.style.cssText = `
+    --x: ${4 + (index % 4) * 24 + Math.random() * 17}%;
+    --y: ${5 + Math.floor(index / 4) * 7.5 + Math.random() * 5}%;
+    --size: ${22 + Math.random() * 20}px;
+    --alpha: ${.2 + Math.random() * .22};
+    --drift: ${Math.random() * 50 - 25}px;
+    --duration: ${16 + Math.random() * 14}s;
+    --delay: ${-Math.random() * 30}s;
+    --tilt: ${Math.random() * 24 - 12}deg;
+    --turn: ${(Math.random() < .5 ? -1 : 1) * (26 + Math.random() * 8)}deg;
+    --spin-duration: ${23 + Math.random() * 19}s;
+    --spin-delay: ${-Math.random() * 42}s;
+  `;
+  stars.append(note);
+}
+starfield.append(stars);
+
 // Demo catalogue: replace these models, illustrations and video sources with production assets.
 
 // -----------------------------------------------------------------------------
 // 01. Product data: model, short description, and image filename (with extension)
 // -----------------------------------------------------------------------------
+// Last value on each row is its independent EUR price; 29 is a sample price.
 const products = [
-  ['G-600L', 'Start mixing with dual decks', 'keyb.png'],
-  ['G-600LA', 'Find your signature sound', 'g600al.png'],
-  ['G900', 'Create beats at your fingertips', 'g900.png'],
-  ['FreedomSolo', 'Discover FreedomSolo', 'FreedomSolo.png'],
-  ['StageRocker2', 'Discover StageRocker2', 'StageRocker2.png'],
-  ['MIC-01', 'Capture every vocal detail', 'mic.svg'],
-  ['PARTY-12', 'Bring your party to life', 'speaker.svg'],
-  ['KEY-49', 'Let every chord flow', 'keys.svg'],
-  ['MIX-4', 'Shape your mix with ease', 'mixer.svg'],
-  ['LIVE-02', 'Two mics. One shared moment.', 'duo.svg'],
-].map(([model, description, image]) => ({
+  ['G-600L', 'Start mixing with dual decks', 'keyb.png', 29],
+  ['G-600LA', 'Find your signature sound', 'g600al.png', 29],
+  ['G900', 'Create beats at your fingertips', 'g900.png', 29],
+  ['FreedomSolo', 'Discover FreedomSolo', 'FreedomSolo.png', 29],
+  ['StageRocker2', 'Discover StageRocker2', 'StageRocker2.png', 29],
+  ['MIC-01', 'Capture every vocal detail', 'mic.svg', 29],
+  ['PARTY-12', 'Bring your party to life', 'speaker.svg', 29],
+  ['KEY-49', 'Let every chord flow', 'keys.svg', 29],
+  ['MIX-4', 'Shape your mix with ease', 'mixer.svg', 29],
+  ['LIVE-02', 'Two mics. One shared moment.', 'duo.svg', 29],
+].map(([model, description, image, priceEUR]) => ({
   model,
+  priceEUR,
   description,
   image: `assets/${image}`
 }));
@@ -24,21 +67,13 @@ const products = [
 // -----------------------------------------------------------------------------
 // 02. Category names and image paths
 // -----------------------------------------------------------------------------
-const categoryNames = ['Keyboard', 'Drum', 'DRUMS', 'MICS', 'KARAOKE'];
-// Replace each path with the image for the matching category.
-const categoryImages = [
-  'assets/keyb.png', // Keyboard
-  'assets/StageRocker2.png', // Drum
-  'assets/category-placeholder.svg', // DRUMS
-  'assets/category-placeholder.svg', // MICS
-  'assets/category-placeholder.svg', // KARAOKE
-];
+const categoryNames = ['KEYBOARDS', 'GUITARS', 'DRUMS', 'DEEJAY', 'KARAOKE', 'PARTY SPEAKERS', 'K-POP', 'POCKET', 'mini VERSE', 'mySTAGE', 'GROOVE BRIX'];
 
 // Edit these model lists to move products between categories.
 // Categories without a group show the full demo catalogue for scrolling tests.
 const productModelsByCategory = {
-  Keyboard: ['G-600L', 'G-600LA', 'G900'],
-  Drum: ['FreedomSolo', 'StageRocker2'],
+  KEYBOARDS: ['G-600L', 'G-600LA', 'G900'],
+  DRUMS: ['FreedomSolo', 'StageRocker2'],
 };
 
 function getCategoryProducts() {
@@ -217,7 +252,6 @@ const $ = selector => document.querySelector(selector);
 const player = $('#player');
 const categories = $('.categories');
 const productRail = $('.products');
-const videoRail = $('.videos');
 let playbackRequest = 0;
 
 // -----------------------------------------------------------------------------
@@ -269,10 +303,7 @@ function loadClip() {
     $('#play-status').textContent = 'Choose another category';
     return;
   }
-  $('#player-title').replaceChildren(document.createTextNode(product.model + ' '));
-  const title = document.createElement('span');
-  title.textContent = clip.title;
-  $('#player-title').append(title);
+  $('#player-title').textContent = product.model;
   $('#preview-model').textContent = product.model;
   $('#preview-description').textContent = product.description;
   $('#preview-image').src = product.image;
@@ -285,71 +316,33 @@ function loadClip() {
     player.removeAttribute('src');
     player.load();
   }
-  select(videoRail, state.clip);
   play();
 }
 
 // -----------------------------------------------------------------------------
-// 06. Build video, category, and product cards
+// 06. Build category and product cards
 // -----------------------------------------------------------------------------
 
-function renderVideos() {
-  videoRail.replaceChildren();
-  getProductClips().forEach((clip, index) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'video-choice';
-    button.innerHTML = `
-      <span class="thumbnail">
-        <img src="${clip.poster || getSelectedProduct().image}" alt="" draggable="false">
-        <span class="thumb-play" aria-hidden="true">▶</span>
-        <span class="duration">${clip.duration}</span>
-      </span>
-      <span class="video-title">
-        ${clip.title}<span>· ${clip.duration}</span>
-      </span>
-    `;
-    button.addEventListener('click', () => {
-      state.clip = index;
-      loadClip();
-    });
-    videoRail.append(button);
-  });
-}
-// Repeat the five categories to keep ten cards available for scrolling tests.
-for (let index = 0; index < categoryNames.length * 2; index++) {
+// Text category grid.
+for (let index = 0; index < categoryNames.length; index++) {
   const type = index % categoryNames.length;
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'category';
-  button.innerHTML = `
-    <img
-      class="category-image"
-      src="${categoryImages[type]}"
-      alt=""
-      draggable="false"
-    >
-    <span class="category-label">
-      ${categoryNames[type]}${index >= categoryNames.length ? '<small>02</small>' : ''}
-    </span>
-  `;
+  button.textContent = categoryNames[type];
   button.addEventListener('click', () => {
     state.category = index;
     state.product = 0;
     state.clip = 0;
     select(categories, index);
     renderProducts();
-    videoRail.scrollLeft = 0;
-    renderVideos();
     loadClip();
   });
   categories.append(button);
 }
 function renderProducts() {
   productRail.replaceChildren();
-  const visibleProducts = getCategoryProducts();
   $('#products-title').innerHTML = `${getCategoryName()} <span>Featured products</span>`;
-  $('#product-count').textContent = `${visibleProducts.length} ${visibleProducts.length === 1 ? 'product' : 'products'}`;
   productRail.scrollLeft = 0;
   getCategoryProducts().forEach((product, index) => {
     const button = document.createElement('button');
@@ -359,14 +352,13 @@ function renderProducts() {
       <img src="${product.image}" alt="${product.model} product illustration" draggable="false">
       <span class="product-copy">
         <strong>${product.model}</strong>
-        <span>${product.description}</span>
       </span>
+      <span class="product-price"><b>${product.priceEUR == null ? '—' : new Intl.NumberFormat('en-IE', { maximumFractionDigits: 2 }).format(product.priceEUR)}</b><small>EUR</small></span>
     `;
     button.addEventListener('click', () => {
       state.product = index;
       state.clip = 0;
       select(productRail, index);
-      renderVideos();
       loadClip();
     });
     productRail.append(button);
@@ -430,7 +422,7 @@ $('#mute').addEventListener('click', () => {
 // -----------------------------------------------------------------------------
 // 09. Keyboard navigation
 // -----------------------------------------------------------------------------
-for (const rail of [categories, productRail, videoRail]) {
+for (const rail of [categories, productRail]) {
   rail.addEventListener('keydown', event => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     const buttons = [...rail.children];
@@ -458,7 +450,6 @@ for (const rail of [categories, productRail, videoRail]) {
 // -----------------------------------------------------------------------------
 select(categories, 0);
 renderProducts();
-renderVideos();
 updateVolume();
 // Load the product video only after the welcome screen has been dismissed.
 const welcomeScreen = $('#welcome-screen');
@@ -512,7 +503,7 @@ function enableDragScroll(rail) {
       rail.setPointerCapture(event.pointerId);
     }
     event.preventDefault();
-    rail.scrollLeft = gesture.scroll - distance;
+    rail.scrollLeft = gesture.scroll - distance / (parseFloat(document.documentElement.style.getPropertyValue('--kiosk-scale')) || 1);
   });
   function endDrag(event) {
     if (!gesture || event.pointerId !== gesture.id) return;
@@ -533,7 +524,7 @@ function enableDragScroll(rail) {
   }, true);
   rail.addEventListener('dragstart', event => event.preventDefault());
 }
-[categories, productRail, videoRail].forEach(enableDragScroll);
+[productRail].forEach(enableDragScroll);
 
 // Fit the 1080 x 1920 portrait canvas without stretching its proportions.
 function resizePortraitCanvas() {
